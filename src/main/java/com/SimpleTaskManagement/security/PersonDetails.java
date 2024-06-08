@@ -1,4 +1,4 @@
-package security;
+package com.SimpleTaskManagement.security;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -30,6 +30,10 @@ public class PersonDetails implements UserDetails{
     @Override
     public String getUsername() {
 	return person.getUsername();
+    }
+    
+    public String getEmail() {
+	return person.getEmail();
     }
 
 }

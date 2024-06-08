@@ -31,4 +31,9 @@ public class PeopleController {
 	
 	return "OK";
     }
+    
+    @GetMapping("/{id}/task_list")
+    public void profilePage() {
+	
+    }
 }
