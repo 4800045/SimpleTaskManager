@@ -18,7 +18,6 @@ public class PersonDetailsService implements UserDetailsService{
 
     private final PersonRepository personRepository;
     
-    
     @Autowired
     public PersonDetailsService(PersonRepository personRepository) {
 	this.personRepository = personRepository;
@@ -33,13 +32,8 @@ public class PersonDetailsService implements UserDetailsService{
 	    throw new UsernameNotFoundException("User not found");
 	}
 	
-	Person person = optionalPerson.get();
 	
-	// TODO figure it out later
-	
-	
-	return null;
-	
+	return new PersonDetails(optionalPerson.get());
 	
     }
 

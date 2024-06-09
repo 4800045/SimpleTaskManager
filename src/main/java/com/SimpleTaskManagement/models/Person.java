@@ -95,5 +95,15 @@ public class Person {
     }
     
     
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + person_id +
+                ", username='" + username + '\'' +
+                ", email=" + email +
+                ", role='" + role + '\'' +
+                '}';
+    
+    }
     
 }
