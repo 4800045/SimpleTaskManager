@@ -1,5 +1,7 @@
 package com.SimpleTaskManagement.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.SimpleTaskManagement.models.Person;
+import com.SimpleTaskManagement.models.Task;
 import com.SimpleTaskManagement.security.PersonDetails;
 import com.SimpleTaskManagement.services.PeopleService;
 
@@ -52,7 +55,6 @@ public class PeopleController {
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	
 	 PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
-	 System.out.println(personDetails.getPerson());
 	 
 	 return "hello";
     }
@@ -63,7 +65,10 @@ public class PeopleController {
 	
 	if (authentication != null && authentication.isAuthenticated()) {
 	    PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
-	    System.out.println(personDetails.getPerson());
+	    
+	    if (personDetails.getPerson().getRole().equals("ROLE_ADMIN")) {
+		return new RedirectView("/admin");
+	    }
 	    
 	    int userId = personDetails.getPerson().getPerson_id();
 	    
@@ -79,7 +84,7 @@ public class PeopleController {
     }
     
     @GetMapping("/user/{id}")
-    public String userPage(@PathVariable("id") int id, Model model) {
+    public String userPage(@PathVariable("id") int id, Model model, @ModelAttribute("task") Task task) {
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	
 	if (authentication.isAuthenticated()) {
@@ -88,12 +93,17 @@ public class PeopleController {
 	    int currentId = personDetails.getPerson().getPerson_id();
 	    
 	    if (currentId == id) {
-		model.addAttribute("userId", id);
+		
+		List<Task> tasks = peopleService.TaskListForPerson(currentId);
+		
+		model.addAttribute("tasks", tasks);
+		
 		return "userPage";
 	    }
 	}
 	
 	return "accessDenied";
     }
+    
     
 }

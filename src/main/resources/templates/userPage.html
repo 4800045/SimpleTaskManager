@@ -5,6 +5,31 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<span th:text="'This is userpage with id = ' + ${id}">This is user page</span>
+    <div th:each="task : ${tasks}">
+        <span th:text="${task.name}"></span>
+    </div>
+
+    <br/>
+    <hr/>
+
+    <form th:method="POST" th:action="@{/newTask}" th:object="${task}">
+        <label for="name">Enter task name</label>
+        <input type="text" th:field="*{name}" id="name">
+        <br/>
+
+        <label for="description">Write description</label>
+        <input type="text" th:field="*{description}" id="description">
+        <br/>
+
+        <label for="start">Enter start date</label>
+        <input type="text" th:field="*{startDate}" id="start">
+        <br/>
+
+        <label for="end">Enter end date</label>
+        <input type="text" th:field="*{endDate}" id="end">
+        <br/>
+
+        <input type="submit" value="Add">        
+    </form>
 </body>
 </html>

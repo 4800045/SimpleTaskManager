@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.SimpleTaskManagement.models.Person;
+import com.SimpleTaskManagement.models.Task;
 import com.SimpleTaskManagement.repositories.PersonRepository;
 
 import jakarta.transaction.Transactional;
@@ -26,7 +27,10 @@ public class PeopleService {
     }
     
     public Optional<Person> findOne(int id) {
-	return personRepository.findById(id);
+	Optional<Person> person = personRepository.findById(id);
+	List<Task> taskList = person.get().getTasks();
+	
+	return person;
     }
     
     @Transactional
@@ -36,4 +40,13 @@ public class PeopleService {
 	
 	personRepository.save(person);
     }
+    
+        
+    public List<Task> TaskListForPerson(int id) {
+	Optional<Person> person = personRepository.findById(id);
+	List<Task> taskList = person.get().getTasks();
+	
+	return taskList;
+    }
+    
 }

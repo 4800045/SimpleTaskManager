@@ -4,10 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.SimpleTaskManagement.models.Person;
 import com.SimpleTaskManagement.models.Task;
 import com.SimpleTaskManagement.repositories.TaskRepository;
+import com.SimpleTaskManagement.security.PersonDetails;
 
 import jakarta.transaction.Transactional;
 
@@ -30,7 +34,19 @@ public class TaskService {
     
     @Transactional
     public void addTask(Task task) {
+	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	
+	PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+	
+	Person person = personDetails.getPerson();
+	
+	person.getTasks().add(task);
+	
+	task.setPerformer(person);
+	
 	taskRepository.save(task);
     }
+    
+    
     
 }

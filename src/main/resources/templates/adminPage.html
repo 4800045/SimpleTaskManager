@@ -6,5 +6,12 @@
 </head>
 <body>
 <h1>Admin page</h1>
+<div th:each="person : ${personList}">
+	<a th:href="@{/user/{id}(id=${person.person_id})}"
+		th:text="${person.username}"></a>
+
+
+</div>
+
 </body>
 </html>
