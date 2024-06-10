@@ -14,59 +14,41 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.SimpleTaskManagement.security.AuthProviderImpl;
+import com.SimpleTaskManagement.services.PersonDetailsService;
 
 @Configuration
 public class SecurityConfig {
     
-    private final UserDetailsService userDetailsService;
-    private final AuthProviderImpl authProvider;
+    private final PersonDetailsService personDetailsService;
+    private final PassConfig passConfig;
     
     @Autowired
-    public SecurityConfig(UserDetailsService userDetailsService, AuthProviderImpl authProvider) {
-	this.userDetailsService = userDetailsService;
-	this.authProvider = authProvider;
+    public SecurityConfig(PersonDetailsService personDetailsService, PassConfig passConfig) {
+	this.personDetailsService = personDetailsService;
+	this.passConfig = passConfig;
+    }
+    
+    
+    
+    @Autowired
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(personDetailsService).passwordEncoder(passConfig.getPasswordEncoder());
     }
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-	http.authorizeRequests()
+	http.csrf(csrf -> csrf.disable())
+	.authorizeHttpRequests(authorize -> authorize
 		.requestMatchers("/admin").hasRole("ADMIN")
 		.requestMatchers("/registration").permitAll()
 		.anyRequest().hasAnyRole("USER", "ADMIN")
-		.and()
-		.formLogin()
-		.defaultSuccessUrl("/hello", true)
-		.and()
-		.logout().logoutUrl("/logout").logoutSuccessUrl("/login");
-	
+		
+	)
+	.formLogin(formLogin -> formLogin
+		.defaultSuccessUrl("/loginSuccess", true));	
+		
 	return http.build();
-	
     }
-    @Bean
-    public PasswordEncoder getPasswordEncoder() {
-	return NoOpPasswordEncoder.getInstance();
-    }
-    
-    @Autowired
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
-    }
-    
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//	http.csrf(csrf -> csrf.disable())
-//	.authorizeHttpRequests(authorize -> authorize
-//		.requestMatchers("/admin").hasRole("ADMIN")
-//		.requestMatchers("/registration").permitAll()
-//		.anyRequest().hasAnyRole("USER", "ADMIN")
-//		
-//	)
-//	.formLogin(formLogin -> formLogin
-//		.defaultSuccessUrl("/hello", true));	
-//		
-//	return http.build();
-//    }
     
     
 //    @Bean

@@ -5,10 +5,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.SimpleTaskManagement.models.Person;
 import com.SimpleTaskManagement.security.PersonDetails;
@@ -42,10 +46,6 @@ public class PeopleController {
 	return "OK";
     }
     
-    @GetMapping("/{id}/task_list")
-    public void profilePage() {
-	
-    }
     
     @GetMapping("/info") 
     public String info() {
@@ -56,4 +56,44 @@ public class PeopleController {
 	 
 	 return "hello";
     }
+    
+    @GetMapping("/loginSuccess")
+    public RedirectView loginSuccess(RedirectAttributes attributes) {
+	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	
+	if (authentication != null && authentication.isAuthenticated()) {
+	    PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+	    System.out.println(personDetails.getPerson());
+	    
+	    int userId = personDetails.getPerson().getPerson_id();
+	    
+	    
+	    
+	    attributes.addAttribute("userId", userId);
+	    
+	    
+	    return new RedirectView("/user/" + userId);
+	}
+	
+	return new RedirectView("/login");
+    }
+    
+    @GetMapping("/user/{id}")
+    public String userPage(@PathVariable("id") int id, Model model) {
+	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	
+	if (authentication.isAuthenticated()) {
+	    PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+	    
+	    int currentId = personDetails.getPerson().getPerson_id();
+	    
+	    if (currentId == id) {
+		model.addAttribute("userId", id);
+		return "userPage";
+	    }
+	}
+	
+	return "accessDenied";
+    }
+    
 }
