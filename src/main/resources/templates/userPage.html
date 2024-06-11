@@ -6,7 +6,7 @@
 </head>
 <body>
     <div th:each="task : ${tasks}">
-        <span th:text="${task.name}"></span>
+        <span th:text="${task.name} + ' (Время начала: ' + ${task.startDate} + ', ' + 'Крайний срок: ' + ${task.endDate} + ')'"></span>
     </div>
 
     <br/>
@@ -21,13 +21,6 @@
         <input type="text" th:field="*{description}" id="description">
         <br/>
 
-        <label for="start">Enter start date</label>
-        <input type="text" th:field="*{startDate}" id="start">
-        <br/>
-
-        <label for="end">Enter end date</label>
-        <input type="text" th:field="*{endDate}" id="end">
-        <br/>
 
         <input type="submit" value="Add">        
     </form>

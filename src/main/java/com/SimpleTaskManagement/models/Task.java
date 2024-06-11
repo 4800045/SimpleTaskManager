@@ -1,6 +1,8 @@
 package com.SimpleTaskManagement.models;
 
 import java.security.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
 
 import org.hibernate.annotations.ManyToAny;
 
@@ -28,27 +30,26 @@ public class Task {
     private String description;
     
     @Column(name = "start_date")
-    private Timestamp startDate;
+    private LocalDateTime startDate;
     
     @Column(name = "end_date")
-    private Timestamp endDate;
+    private LocalDateTime endDate;
     
     @Column(name = "status")
     private String status;
     
     
     @ManyToOne
-    @JoinColumn(name = "performer_id", referencedColumnName = "person_id")
+    @JoinColumn(name = "performerid", referencedColumnName = "personId")
     private Person performer;
     
     public Task() {}
     
 
-    public Task(String name, String description, Timestamp startDate, String status,
+    public Task(String name, String description, String status,
 	    Person performer) {
 	this.name = name;
 	this.description = description;
-	this.startDate = startDate;
 	this.status = status;
 	this.performer = performer;
     }
@@ -77,19 +78,19 @@ public class Task {
         this.description = description;
     }
 
-    public Timestamp getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Timestamp startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public Timestamp getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Timestamp endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 

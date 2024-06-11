@@ -20,14 +20,18 @@ import com.SimpleTaskManagement.models.Person;
 import com.SimpleTaskManagement.models.Task;
 import com.SimpleTaskManagement.security.PersonDetails;
 import com.SimpleTaskManagement.services.PeopleService;
+import com.SimpleTaskManagement.services.TaskService;
 
 @Controller
 public class PeopleController {
     private final PeopleService peopleService;
     
+    private final TaskService taskService;
+    
     @Autowired
-    public PeopleController(PeopleService peopleService) {
+    public PeopleController(PeopleService peopleService, TaskService taskService) {
 	this.peopleService = peopleService;
+	this.taskService = taskService;
     }
     
     @GetMapping("/hello")
@@ -94,7 +98,7 @@ public class PeopleController {
 	    
 	    if (currentId == id) {
 		
-		List<Task> tasks = peopleService.TaskListForPerson(currentId);
+		List<Task> tasks = taskService.TaskListForPerson(currentId);
 		
 		model.addAttribute("tasks", tasks);
 		

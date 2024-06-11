@@ -41,12 +41,6 @@ public class PeopleService {
 	personRepository.save(person);
     }
     
-        
-    public List<Task> TaskListForPerson(int id) {
-	Optional<Person> person = personRepository.findById(id);
-	List<Task> taskList = person.get().getTasks();
-	
-	return taskList;
-    }
+    
     
 }

@@ -1,5 +1,7 @@
 package com.SimpleTaskManagement.services;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,11 +42,22 @@ public class TaskService {
 	
 	Person person = personDetails.getPerson();
 	
+	task.setStartDate(LocalDateTime.now());
+	
+	task.setEndDate(LocalDateTime.now().plusDays(7));
+	
 	person.getTasks().add(task);
 	
 	task.setPerformer(person);
 	
 	taskRepository.save(task);
+    }
+    
+    
+    public List<Task> TaskListForPerson(int id) {
+	List<Task> taskList = taskRepository.findByPerformerPersonId(id);
+	
+	return taskList;
     }
     
     

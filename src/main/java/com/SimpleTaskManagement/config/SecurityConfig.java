@@ -21,18 +21,21 @@ public class SecurityConfig {
     
     private final PersonDetailsService personDetailsService;
     private final PassConfig passConfig;
+    private final AuthProviderImpl authProvider;
     
     @Autowired
-    public SecurityConfig(PersonDetailsService personDetailsService, PassConfig passConfig) {
+    public SecurityConfig(PersonDetailsService personDetailsService, PassConfig passConfig,
+	    AuthProviderImpl authProvider) {
 	this.personDetailsService = personDetailsService;
 	this.passConfig = passConfig;
+	this.authProvider = authProvider;
     }
     
     
-    
+    //TODO Change it later
     @Autowired
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(personDetailsService).passwordEncoder(passConfig.getPasswordEncoder());
+        auth.authenticationProvider(authProvider);
     }
     
     @Bean
