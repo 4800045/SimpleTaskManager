@@ -11,6 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import jakarta.validation.constraints.*;
+
 @Entity
 @Table(name = "person")
 public class Person {
@@ -21,12 +23,15 @@ public class Person {
     private int personId;
     
     @Column(name = "username")
+    @Size(min = 4, max = 30, message = "Username should be between 4 and 30 characters")
     private String username;
     
     @Column(name = "email")
+    @Email
     private String email;
     
     @Column(name = "password")
+    @NotEmpty
     private String password;
     
     @Column(name = "role")

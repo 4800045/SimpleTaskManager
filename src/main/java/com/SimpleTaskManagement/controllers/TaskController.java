@@ -33,16 +33,12 @@ public class TaskController {
     
     
     @PostMapping("/newTask")
-    public String newTaskPage(@ModelAttribute("task") Task task) {
+    public String newTaskPage(@ModelAttribute("task") Task task, @RequestParam("userId") int userId) {
 	
 	
-	taskService.addTask(task);
+	taskService.addTask(task, userId);
 	
-	int id = task.getPerformer().getPerson_id();
-	
-	
-	
-	return "redirect:/user/" + id;
+	return "redirect:/user/" + userId;
 	
 	
     }
@@ -72,7 +68,6 @@ public class TaskController {
     public String updateTask(@ModelAttribute("task") Task task, @RequestParam("id") int id) {
 	
 	
-	System.out.println("task from Model before update method//////////////////////////////");
 	System.out.println(task);
 	
 	task = taskService.update(task, id);

@@ -33,6 +33,12 @@ public class PeopleService {
 	return person;
     }
     
+    public Optional<Person> findByName(String name) {
+	Optional<Person> person = personRepository.findByUsername(name);
+	
+	return person;
+    }
+    
     @Transactional
     public void addPerson(Person person) {
 	

@@ -40,13 +40,11 @@ public class TaskService {
     }
     
     @Transactional
-    public void addTask(Task task) {
-	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public void addTask(Task task, int id) {
 	
-	PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+	Optional<Person> optionalPerson = personRepository.findById(id);
 	
-	Person person = personDetails.getPerson();
-	
+	Person person = optionalPerson.get();
 	
 	task.setStartDate(LocalDateTime.now());
 	
@@ -75,20 +73,17 @@ public class TaskService {
     
     @Transactional
     public Task update(Task task, int id) {
-	System.out.println("task from method parameter //////////////////////////////////");
 	System.out.println(task);
 	
 	
 	Optional<Task> taskToBeUpdated = taskRepository.findById(id);
 	
-	System.out.println("task from repo ////////////////////////////////////////////");
 	System.out.println(taskToBeUpdated.get());
 	
 	
 	taskToBeUpdated.get().setName(task.getName());
 	taskToBeUpdated.get().setDescription(task.getDescription());
 	
-	System.out.println("task before update /////////////////////////////////////////////");
 	System.out.println(taskToBeUpdated.get());
 	
 	taskRepository.save(taskToBeUpdated.get());

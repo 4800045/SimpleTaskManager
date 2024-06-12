@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,17 +22,21 @@ import com.SimpleTaskManagement.models.Task;
 import com.SimpleTaskManagement.security.PersonDetails;
 import com.SimpleTaskManagement.services.PeopleService;
 import com.SimpleTaskManagement.services.TaskService;
+import com.SimpleTaskManagement.util.UserValidation;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class PeopleController {
     private final PeopleService peopleService;
-    
+    private final UserValidation validation;
     private final TaskService taskService;
     
     @Autowired
-    public PeopleController(PeopleService peopleService, TaskService taskService) {
+    public PeopleController(PeopleService peopleService, TaskService taskService, UserValidation validation) {
 	this.peopleService = peopleService;
 	this.taskService = taskService;
+	this.validation = validation;
     }
     
     @GetMapping("/hello")
@@ -45,12 +50,21 @@ public class PeopleController {
     }
     
     @PostMapping("/registration")
-    @ResponseBody
-    public String registration(@ModelAttribute("person") Person person) {
+    public String registration(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
+	validation.validate(person, bindingResult);
 	
-	peopleService.addPerson(person);
+	if (bindingResult.hasErrors()) {
+	    return "registration";
+	}
+	else {
+	    peopleService.addPerson(person);
+	}
 	
-	return "OK";
+	int id = person.getPerson_id();
+	
+	
+	
+	return "redirect:/user/" + id;
     }
     
     
@@ -91,13 +105,19 @@ public class PeopleController {
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	
 	if (authentication.isAuthenticated()) {
+	    
+	    
 	    PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
 	    
 	    int currentId = personDetails.getPerson().getPerson_id();
 	    
-	    if (currentId == id) {
+	    String role = personDetails.getPerson().getRole();
+	    
+	    
+	    if (currentId == id || role.equals("ROLE_ADMIN")) {
 		
-		List<Task> tasks = taskService.TaskListForPerson(currentId);
+		
+		List<Task> tasks = taskService.TaskListForPerson(id);
 		
 		model.addAttribute("tasks", tasks);
 		model.addAttribute("userId", id);
