@@ -109,6 +109,15 @@ public class Task {
     public void setPerformer(Person performer) {
         this.performer = performer;
     }
+
+
+    @Override
+    public String toString() {
+	return "Task [task_id=" + task_id + ", name=" + name + ", description=" + description + ", startDate="
+		+ startDate + ", endDate=" + endDate + ", status=" + status + "]";
+    }
+    
+    
     
     
     

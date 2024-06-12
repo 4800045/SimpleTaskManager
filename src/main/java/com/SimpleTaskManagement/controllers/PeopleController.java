@@ -65,27 +65,26 @@ public class PeopleController {
     
     @GetMapping("/loginSuccess")
     public RedirectView loginSuccess(RedirectAttributes attributes) {
-	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	
-	if (authentication != null && authentication.isAuthenticated()) {
-	    PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
-	    
-	    if (personDetails.getPerson().getRole().equals("ROLE_ADMIN")) {
-		return new RedirectView("/admin");
-	    }
-	    
-	    int userId = personDetails.getPerson().getPerson_id();
-	    
-	    
-	    
-	    attributes.addAttribute("userId", userId);
-	    
-	    
-	    return new RedirectView("/user/" + userId);
-	}
-	
-	return new RedirectView("/login");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        if (authentication != null && authentication.isAuthenticated()) {
+            PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+            
+            if (personDetails.getPerson().getRole().equals("ROLE_ADMIN")) {
+                return new RedirectView("/admin");
+            }
+            
+            int userId = personDetails.getPerson().getPerson_id();
+            
+            attributes.addAttribute("id", userId);
+            
+            return new RedirectView("/user/{id}");
+        }
+        
+        return new RedirectView("/login");
     }
+
+
     
     @GetMapping("/user/{id}")
     public String userPage(@PathVariable("id") int id, Model model, @ModelAttribute("task") Task task) {
@@ -101,6 +100,8 @@ public class PeopleController {
 		List<Task> tasks = taskService.TaskListForPerson(currentId);
 		
 		model.addAttribute("tasks", tasks);
+		model.addAttribute("userId", id);
+		
 		
 		return "userPage";
 	    }
@@ -108,6 +109,8 @@ public class PeopleController {
 	
 	return "accessDenied";
     }
+    
+    
     
     
 }

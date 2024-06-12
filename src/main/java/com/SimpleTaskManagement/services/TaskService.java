@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.SimpleTaskManagement.models.Person;
 import com.SimpleTaskManagement.models.Task;
+import com.SimpleTaskManagement.repositories.PersonRepository;
 import com.SimpleTaskManagement.repositories.TaskRepository;
 import com.SimpleTaskManagement.security.PersonDetails;
 
@@ -20,10 +22,13 @@ import jakarta.transaction.Transactional;
 @Service
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final PersonRepository personRepository;
     
     @Autowired
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, PersonRepository personRepository) {
 	this.taskRepository = taskRepository;
+	this.personRepository = personRepository;
+	
     }
     
     public List<Task> taskList() {
@@ -42,11 +47,14 @@ public class TaskService {
 	
 	Person person = personDetails.getPerson();
 	
+	
 	task.setStartDate(LocalDateTime.now());
 	
 	task.setEndDate(LocalDateTime.now().plusDays(7));
 	
-	person.getTasks().add(task);
+	task.setStatus("new");
+	
+	person = personRepository.fetchTasks(person.getPerson_id());
 	
 	task.setPerformer(person);
 	
@@ -60,6 +68,33 @@ public class TaskService {
 	return taskList;
     }
     
+    @Transactional
+    public void deleteTask(int id) {
+	taskRepository.deleteById(id);;
+    }
+    
+    @Transactional
+    public Task update(Task task, int id) {
+	System.out.println("task from method parameter //////////////////////////////////");
+	System.out.println(task);
+	
+	
+	Optional<Task> taskToBeUpdated = taskRepository.findById(id);
+	
+	System.out.println("task from repo ////////////////////////////////////////////");
+	System.out.println(taskToBeUpdated.get());
+	
+	
+	taskToBeUpdated.get().setName(task.getName());
+	taskToBeUpdated.get().setDescription(task.getDescription());
+	
+	System.out.println("task before update /////////////////////////////////////////////");
+	System.out.println(taskToBeUpdated.get());
+	
+	taskRepository.save(taskToBeUpdated.get());
+	
+	return taskToBeUpdated.get();
+    }
     
     
 }

@@ -7,6 +7,15 @@
 <body>
     <div th:each="task : ${tasks}">
         <span th:text="${task.name} + ' (Время начала: ' + ${task.startDate} + ', ' + 'Крайний срок: ' + ${task.endDate} + ')'"></span>
+        	<form th:method="DELETE" th:action="@{/deleteTask/{id}(id=${task.getId()})}" th:object=${userId}>
+        		<input type="hidden" name="userId" th:value="${id}">
+			<input type="submit" value="Delete task">
+
+		</form>
+		
+		<form th:method=GET th:action="@{/updateTask/{id}(id=${task.getId()})}">
+			<input type="submit" value="Update task">
+		</form>
     </div>
 
     <br/>
