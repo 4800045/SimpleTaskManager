@@ -68,7 +68,6 @@ public class TaskController {
     public String updateTask(@ModelAttribute("task") Task task, @RequestParam("id") int id) {
 	
 	
-	System.out.println(task);
 	
 	task = taskService.update(task, id);
 		

@@ -36,6 +36,9 @@ public class Person {
     
     @Column(name = "role")
     private String role;
+    
+    @Column(name = "status")
+    private String status;
 
     
     @OneToMany(mappedBy = "performer")
@@ -44,10 +47,11 @@ public class Person {
     
     public Person() {}
 
-    public Person(String username, String email, String password) {
+    public Person(String username, String email, String password, String status) {
 	this.username = username;
 	this.email = email;
 	this.password = password;
+	this.status = "active";
     }
 
     
@@ -100,7 +104,14 @@ public class Person {
         this.tasks = tasks;
     }
     
-    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Person{" +
