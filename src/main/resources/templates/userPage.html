@@ -5,6 +5,12 @@
 <title>Insert title here</title>
 </head>
 <body>
+	
+<div th:if="${error}">
+		<p th:text="${error}" style="color: red;"></p>
+</div>
+
+<div th:if="${error == null}">
     <div th:each="task : ${tasks}">
         <span th:text="'Task: ' + ${task.name} + ', ' + ${task.status}"></span>
         <br/>
@@ -37,5 +43,6 @@
 	<input type="hidden" name="userId" th:value="${id}">
         <input type="submit" value="Add">        
     </form>
+</div>
 </body>
 </html>

@@ -106,24 +106,39 @@ public class PeopleController {
 	
 	if (authentication.isAuthenticated()) {
 	    
-	    
 	    PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
 	    
 	    int currentId = personDetails.getPerson().getPerson_id();
 	    
 	    String role = personDetails.getPerson().getRole();
 	    
-	    
 	    if (currentId == id || role.equals("ROLE_ADMIN")) {
+//		if (personDetails.isAccountNonLocked() || role.equals("ROLE_ADMIN")) {
+//		    	List<Task> tasks = taskService.TaskListForPerson(id);
+//	    		
+//	    		model.addAttribute("tasks", tasks);
+//	    		model.addAttribute("userId", id);
+//	    		
+//	    		return "userPage";
+//	    		
+//		}
+//
+//		model.addAttribute("error", "Ваша учетная запись заблокирована. Пожалуйста, свяжитесь с поддержкой.");
+//		
+//		
+//		return "userPage";
 		
+		if (!personDetails.isAccountNonLocked()) {
+		    model.addAttribute("error", "Ваша учетная запись заблокирована. Пожалуйста, свяжитесь с поддержкой.");
+		}
 		
 		List<Task> tasks = taskService.TaskListForPerson(id);
+    		
+    		model.addAttribute("tasks", tasks);
+    		model.addAttribute("userId", id);
+    		
+    		return "userPage";
 		
-		model.addAttribute("tasks", tasks);
-		model.addAttribute("userId", id);
-		
-		
-		return "userPage";
 	    }
 	}
 	

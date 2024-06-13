@@ -40,6 +40,16 @@ public class PeopleService {
     }
     
     @Transactional
+    public void updatePerson(Person person) {
+	Optional<Person> personToBeUpdated = personRepository.findById(person.getPerson_id());
+	
+	personToBeUpdated.get().setStatus(person.getStatus());
+	
+	personRepository.save(personToBeUpdated.get());
+	
+    }
+    
+    @Transactional
     public void addPerson(Person person) {
 	
 	person.setRole("ROLE_USER");

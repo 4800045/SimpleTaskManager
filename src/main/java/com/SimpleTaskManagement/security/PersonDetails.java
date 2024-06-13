@@ -39,7 +39,11 @@ public class PersonDetails implements UserDetails{
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+	
+	String status = this.person.getStatus();
+	
+	return status.equals("active");
+	
     }
 
     @Override

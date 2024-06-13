@@ -9,6 +9,18 @@
 <div th:each="person : ${personList}">
 	<a th:href="@{/user/{id}(id=${person.person_id})}"
 		th:text="${person.username}"></a> <span th:text="${person.status}"></span>
+		<div th:if="${person.status == 'active'}">
+			<form th:method="POST" th:action="@{/admin/setUserStatus/{id}(id=${person.getPerson_id()})}">
+				<input type="submit" value="deactivate">
+			</form>
+		</div>
+		
+		<div th:if="${person.status == 'deactivated'} ">
+			<form th:method="POST" th:action="@{/admin/setUserStatus/{id}(id=${person.getPerson_id()})}">
+				<input type="submit" value="activate">
+			</form>
+		</div>
+		
 	
 
 
